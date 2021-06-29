@@ -1,0 +1,55 @@
+{
+  "name": "acp-delivery-api",
+  "version": "1.0.0",
+  "description": "Trabalhinho da disciplina Tópicos Especiais em Algorítmos.",
+  "private": true,
+  "license": "MIT",
+  "authors": [
+    "Fernanda C. Silva",
+    "Julio L. Muller",
+    "Lucas M. Malfertheiner"
+  ],
+  "scripts": {
+    "postinstall": "node -e \"require('fs').existsSync('.env') || require('fs').copyFileSync('.env.example', '.env')\"",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "lint": "eslint src/ --fix",
+    "seed": "sequelize db:seed:all",
+    "migrate": "sequelize db:migrate",
+    "migrate:seed": "npm run migrate && npm run seed",
+    "migrate:reset": "sequelize db:migrate:undo:all && npm run migrate",
+    "migrate:reset:seed": "npm run migrate:reset && npm run seed"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "faker": "^5.5.3",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.29.0",
+    "eslint-config-lacussoft": "^2.0.2",
+    "nodemon": "^2.0.7",
+    "sequelize-cli": "^6.2.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "lacussoft",
+    "env": {
+      "commonjs": true,
+      "node": true
+    },
+    "ignorePatterns": [
+      "!.sequelizerc"
+    ],
+    "rules": {
+      "camelcase": "off",
+      "no-console": "off",
+      "no-magic-numbers": "off",
+      "no-underscore-dangle": "off"
+    }
+  }
+}
