@@ -54,6 +54,7 @@
     ],
     "rules": {
       "camelcase": "off",
+      "linebreak-style": ["error", "unix"],
       "no-console": "off",
       "no-magic-numbers": "off",
       "no-underscore-dangle": "off"
