@@ -1,10 +1,10 @@
-const { faker, hashPassword } = require('../../utils')
+const { faker, passwordUtils } = require('../../utils')
 
 function makeMotoboy({ associates }) {
   const cpf = faker.cpf()
   const name = faker.name.findName()
   const phone = faker.phone.phoneNumber()
-  const password = hashPassword('qwerty123')
+  const password = passwordUtils.hash('qwerty123')
   const created_at = faker.date.past(2)
   const updated_at = faker.date.between(created_at, new Date())
   const associate_id = faker.random.arrayElement(associates).id

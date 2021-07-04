@@ -1,9 +1,9 @@
-const { faker, hashPassword } = require('../../utils')
+const { faker, passwordUtils } = require('../../utils')
 
 function makeAssociate() {
   const cnpj = faker.cnpj()
   const name = faker.name.findName()
-  const password = hashPassword('qwerty123')
+  const password = passwordUtils.hash('qwerty123')
   const created_at = faker.date.past(2)
   const updated_at = faker.date.between(created_at, new Date())
 
