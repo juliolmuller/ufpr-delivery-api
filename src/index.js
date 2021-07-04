@@ -1,17 +1,16 @@
-require('./database/config')
+require('./database')
+require('express-async-errors')
 const express = require('express')
-const router = require('./routes/router')
-require('./database/index')
+const routes = require('./routes')
+const errorHandler = require('./errors')
 
 const app = express()
-const port = process.env.PORT
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(router)
+app.use(routes)
+app.use(errorHandler)
 
-app.listen(port, () => {
-  console.log(`Servidor executando em http://localhost:${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor executando em http://localhost:${process.env.PORT}`)
 })
-
-module.exports = app
