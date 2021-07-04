@@ -13,8 +13,8 @@ class Address extends Model {
   }
 
   static associate({ Associate, Customer }) {
-    this.hasOne(Associate, { foreignKey: 'associate_id', as: 'associate' })
-    this.hasOne(Customer, { foreignKey: 'customer_id', as: 'customer' })
+    this.belongsTo(Associate, { foreignKey: 'associate_id', as: 'associate' })
+    this.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer' })
   }
 }
 
