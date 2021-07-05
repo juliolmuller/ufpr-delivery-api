@@ -3,7 +3,7 @@ const { AuthenticationError, ValidationError } = require('../errors')
 const { Associate, Motoboy } = require('../models')
 const { jwtUtils, passwordUtils } = require('../utils')
 
-const AUTH_ROLES = ['ADMIN', 'ASSOCIATE', 'MOTOBOY']
+const AUTH_ROLES = ['ADMIN', 'ASSOC', 'MOTOBOY']
 const { ADMIN_LOGIN, ADMIN_PASSWORD } = process.env
 
 async function signIn(request, response) {
@@ -32,7 +32,7 @@ async function signIn(request, response) {
       })
   }
 
-  const user = role === 'ASSOCIATE'
+  const user = role === 'ASSOC'
     ? await Associate.findOne({ where: { cnpj: login } })
     : await Motoboy.findOne({ where: { cpf: login } })
 
