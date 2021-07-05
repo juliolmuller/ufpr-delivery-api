@@ -1,12 +1,13 @@
 const express = require('express')
 const { motoboysController } = require('../controllers')
+const { authorize } = require('../middlewares')
 
 const motoboysRouter = express.Router()
 
-motoboysRouter.get('/', motoboysController.index)
-motoboysRouter.post('/', motoboysController.store)
-motoboysRouter.get('/:cpf', motoboysController.show)
-motoboysRouter.put('/:id', motoboysController.update)
-motoboysRouter.delete('/:id', motoboysController.destroy)
+motoboysRouter.get('/', authorize('ADMIN', 'ASSOC'), motoboysController.index)
+motoboysRouter.get('/:cpf', authorize('ADMIN', 'ASSOC', 'MOTOBOY'), motoboysController.show)
+motoboysRouter.post('/', authorize('ASSOC'), motoboysController.store)
+motoboysRouter.put('/:id', authorize('ASSOC'), motoboysController.update)
+motoboysRouter.delete('/:id', authorize('ASSOC'), motoboysController.destroy)
 
 module.exports = motoboysRouter

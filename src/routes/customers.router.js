@@ -1,12 +1,13 @@
 const express = require('express')
 const { customersController } = require('../controllers')
+const { authorize } = require('../middlewares')
 
 const customersRouter = express.Router()
 
-customersRouter.get('/', customersController.index)
-customersRouter.post('/', customersController.store)
-customersRouter.get('/:cnpj', customersController.show)
-customersRouter.put('/:id', customersController.update)
-customersRouter.delete('/:id', customersController.destroy)
+customersRouter.get('/', authorize('ADMIN', 'ASSOC'), customersController.index)
+customersRouter.get('/:cnpj', authorize('ADMIN', 'ASSOC'), customersController.show)
+customersRouter.post('/', authorize('ASSOC'), customersController.store)
+customersRouter.put('/:id', authorize('ASSOC'), customersController.update)
+customersRouter.delete('/:id', authorize('ASSOC'), customersController.destroy)
 
 module.exports = customersRouter
