@@ -19,7 +19,7 @@ async function signIn(request, response) {
 
   if (role === 'ADMIN') {
     if (login !== ADMIN_LOGIN || password !== ADMIN_PASSWORD) {
-      throw new AuthenticationError('Credenciais inválidas.')
+      throw new AuthenticationError()
     }
 
     return response
@@ -37,7 +37,7 @@ async function signIn(request, response) {
     : await Motoboy.findOne({ where: { cpf: login } })
 
   if (!user || !passwordUtils.compare(password, user.password)) {
-    throw new AuthenticationError('Credenciais inválidas.')
+    throw new AuthenticationError()
   }
 
   return response
