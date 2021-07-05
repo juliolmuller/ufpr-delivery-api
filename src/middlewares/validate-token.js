@@ -2,7 +2,7 @@ const { AuthenticationError, AuthorizationError } = require('../errors')
 const { jwtUtils } = require('../utils')
 
 function validateToken() {
-  return (request, response, next) => {
+  return (request, _response, next) => {
     const normalizedHeaders = Object.fromEntries(
       Object.entries(request.headers).map(([key, value]) => {
         return [key.toLowerCase(), value]
@@ -15,7 +15,7 @@ function validateToken() {
     }
 
     try {
-      request.auth = jwtUtils.extractPayload(token)
+      request.auth = jwtUtils.extractPayload(token).user
       next()
     } catch (error) {
       throw new AuthorizationError(error.message)
