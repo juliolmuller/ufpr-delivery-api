@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes')
 
-const DEFAULT_MESSAGE = 'Token de acesso inválido.'
+const DEFAULT_MESSAGE = 'Autorização ao recurso negada.'
 
 class AuthorizationError extends Error {
   constructor(message = DEFAULT_MESSAGE) {
