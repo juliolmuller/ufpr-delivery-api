@@ -1,6 +1,11 @@
 const express = require('express')
 const authRouter = require('./auth.router')
-const { checkToken } = require('../middlewares')
+const reportsRouter = require('./reports.router')
+const associatesRouter = require('./associates.router')
+const customersRouter = require('./customers.router')
+const motoboysRouter = require('./motoboys.router')
+const ordersRouter = require('./orders.router')
+const { validateToken } = require('../middlewares')
 
 const router = express.Router()
 
@@ -15,5 +20,10 @@ router.get('/', (_request, response) => {
 })
 
 router.use(authRouter)
+router.use('/reports', validateToken(), reportsRouter)
+router.use('/associates', validateToken(), associatesRouter)
+router.use('/customers', validateToken(), customersRouter)
+router.use('/motoboys', validateToken(), motoboysRouter)
+router.use('/orders', validateToken(), ordersRouter)
 
 module.exports = router
