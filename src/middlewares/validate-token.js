@@ -3,12 +3,7 @@ const { jwtUtils } = require('../utils')
 
 function validateToken() {
   return (request, _response, next) => {
-    const normalizedHeaders = Object.fromEntries(
-      Object.entries(request.headers).map(([key, value]) => {
-        return [key.toLowerCase(), value]
-      }),
-    )
-    const token = normalizedHeaders['x-access-token']
+    const token = request.headers['x-access-token']
 
     if (!token) {
       throw new AuthenticationError('Área restrita.')
