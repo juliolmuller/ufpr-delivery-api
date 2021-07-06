@@ -11,7 +11,7 @@ class Motoboy extends Model {
   }
 
   static associate({ Associate, Order }) {
-    this.belongsTo(Associate, { foreignKey: 'associate_id', as: 'associate' })
+    this.belongsToMany(Associate, { foreignKey: 'associate_id', through: 'associate_motoboys', as: 'associate' })
     this.hasMany(Order, { foreignKey: 'motoboy_id', as: 'orders' })
   }
 }

@@ -10,7 +10,7 @@ class Customer extends Model {
 
   static associate({ Address, Associate, Order }) {
     this.hasOne(Address, { foreignKey: 'customer_id', as: 'address' })
-    this.belongsTo(Associate, { foreignKey: 'associate_id', as: 'associate' })
+    this.belongsToMany(Associate, { foreignKey: 'associate_id', through: 'associate_customers', as: 'associate' })
     this.hasMany(Order, { foreignKey: 'customer_id', as: 'orders' })
   }
 }

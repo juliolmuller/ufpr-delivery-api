@@ -24,16 +24,6 @@ async function up(queryInterface) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    associate_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'associates',
-        key: 'id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),

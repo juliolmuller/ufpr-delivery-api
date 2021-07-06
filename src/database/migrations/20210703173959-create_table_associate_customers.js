@@ -1,26 +1,27 @@
 const { DataTypes, fn } = require('sequelize')
 
 async function up(queryInterface) {
-  await queryInterface.createTable('customers', {
+  await queryInterface.createTable('associate_customers', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    cnpj: {
-      type: DataTypes.STRING(14),
-      allowNull: false,
-      unique: true,
     },
     associate_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'associates',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+    customer_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'customers',
         key: 'id',
       },
       onUpdate: 'CASCADE',
