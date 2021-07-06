@@ -42,7 +42,7 @@ async function show(request, response) {
   const motoboy = await Motoboy.findOne(queryFilter)
 
   if (!motoboy) {
-    throw new ResourceNotFound(`Motoboy com CPF "${cpf}" não encontrado.`)
+    throw new ResourceNotFound(`Motoboy com CPF '${cpf}' não encontrado.`)
   }
 
   response
@@ -75,9 +75,21 @@ function update(request, response) {
  *
  * @middleware
  */
-function destroy(request, response) {
-  // TODO: implement
-  response.send()
+async function destroy(request, response) {
+  const motoboyId = request.params.id
+  const queryFilter = { where: {
+    associate_id: request.auth.id,
+    id: motoboyId,
+  } }
+  const recordsCount = await Motoboy.destroy(queryFilter)
+
+  if (recordsCount === 0) {
+    throw new ResourceNotFound(`Motoboy com ID '${motoboyId}' não encontrado.`)
+  }
+
+  response
+    .status(StatusCodes.OK)
+    .json({ message: 'Motoboy excluído com sucesso.' })
 }
 
 module.exports = { index, show, store, update, destroy }
