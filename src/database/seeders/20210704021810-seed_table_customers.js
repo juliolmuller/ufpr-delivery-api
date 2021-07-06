@@ -3,14 +3,14 @@ const { faker } = require('../../utils')
 function makeCustomer() {
   const cnpj = faker.cnpj()
   const name = faker.name.findName()
-  const created_at = faker.date.past(2)
-  const updated_at = faker.date.between(created_at, new Date())
+  const createdAt = faker.date.past(2)
+  const updatedAt = faker.date.between(createdAt, new Date())
 
   return {
     name,
     cnpj,
-    created_at,
-    updated_at,
+    createdAt,
+    updatedAt,
   }
 }
 

@@ -9,12 +9,15 @@ class Address extends Model {
       city: DataTypes.STRING,
       state: DataTypes.STRING,
       cep: DataTypes.STRING(8),
-    }, { sequelize })
+    }, {
+      tableName: 'addresses',
+      sequelize,
+    })
   }
 
   static associate({ Associate, Customer }) {
-    this.belongsTo(Associate, { foreignKey: 'associate_id', as: 'associate' })
-    this.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer' })
+    this.belongsTo(Associate, { foreignKey: 'associateId', as: 'associate' })
+    this.belongsTo(Customer, { foreignKey: 'customerId', as: 'customer' })
   }
 }
 

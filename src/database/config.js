@@ -10,6 +10,5 @@ module.exports = {
   timezone: process.env.TIMEZONE,
   define: {
     timestamp: true,
-    underscored: true,
   },
 }

@@ -24,11 +24,11 @@ async function up(queryInterface) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },

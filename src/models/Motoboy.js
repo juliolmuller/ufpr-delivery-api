@@ -7,12 +7,15 @@ class Motoboy extends Model {
       phone: DataTypes.STRING(20),
       cpf: DataTypes.STRING(11),
       password: DataTypes.STRING,
-    }, { sequelize })
+    }, {
+      tableName: 'motoboys',
+      sequelize,
+    })
   }
 
   static associate({ Associate, Order }) {
-    this.belongsToMany(Associate, { foreignKey: 'associate_id', through: 'associate_motoboys', as: 'associates' })
-    this.hasMany(Order, { foreignKey: 'motoboy_id', as: 'orders' })
+    this.belongsToMany(Associate, { through: 'associateMotoboys', foreignKey: 'motoboyId', as: 'associates' })
+    this.hasMany(Order, { foreignKey: 'motoboyId', as: 'orders' })
   }
 }
 

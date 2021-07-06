@@ -7,10 +7,10 @@ function makeAddress({ associates = null, customers = null }) {
   const cep = faker.address.zipCode('########')
   const state = faker.address.stateAbbr()
   const city = faker.address.cityName()
-  const created_at = faker.date.past(2)
-  const updated_at = faker.date.between(created_at, new Date())
-  const associate_id = associates && faker.random.arrayElement(associates).id
-  const customer_id = customers && faker.random.arrayElement(customers).id
+  const associateId = associates && faker.random.arrayElement(associates).id
+  const customerId = customers && faker.random.arrayElement(customers).id
+  const createdAt = faker.date.past(2)
+  const updatedAt = faker.date.between(createdAt, new Date())
 
   return {
     cep,
@@ -19,10 +19,10 @@ function makeAddress({ associates = null, customers = null }) {
     street,
     number,
     complement,
-    associate_id,
-    customer_id,
-    created_at,
-    updated_at,
+    associateId,
+    customerId,
+    createdAt,
+    updatedAt,
   }
 }
 

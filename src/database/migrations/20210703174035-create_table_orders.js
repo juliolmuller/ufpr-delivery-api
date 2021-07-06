@@ -11,7 +11,7 @@ async function up(queryInterface) {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    associate_id: {
+    associateId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -21,7 +21,7 @@ async function up(queryInterface) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    customer_id: {
+    customerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -31,7 +31,7 @@ async function up(queryInterface) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    motoboy_id: {
+    motoboyId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -49,11 +49,11 @@ async function up(queryInterface) {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },

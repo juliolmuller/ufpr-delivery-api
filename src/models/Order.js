@@ -6,13 +6,16 @@ class Order extends Model {
       description: DataTypes.TEXT,
       status: DataTypes.STRING(32),
       value: DataTypes.DECIMAL(10, 2),
-    }, { sequelize })
+    }, {
+      tableName: 'orders',
+      sequelize,
+    })
   }
 
   static associate({ Associate, Customer, Motoboy }) {
-    this.belongsTo(Associate, { foreignKey: 'associate_id', as: 'associate' })
-    this.belongsTo(Customer, { foreignKey: 'customer_id', as: 'customer' })
-    this.belongsTo(Motoboy, { foreignKey: 'motoboy_id', as: 'motoboy' })
+    this.belongsTo(Associate, { foreignKey: 'associateId', as: 'associate' })
+    this.belongsTo(Customer, { foreignKey: 'customerId', as: 'customer' })
+    this.belongsTo(Motoboy, { foreignKey: 'motoboyId', as: 'motoboy' })
   }
 }
 

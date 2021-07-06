@@ -6,14 +6,17 @@ class Associate extends Model {
       name: DataTypes.STRING,
       cnpj: DataTypes.STRING(14),
       password: DataTypes.STRING,
-    }, { sequelize })
+    }, {
+      tableName: 'associates',
+      sequelize,
+    })
   }
 
   static associate({ Address, Customer, Motoboy, Order }) {
-    this.hasOne(Address, { foreignKey: 'associate_id', as: 'address' })
-    this.belongsToMany(Customer, { foreignKey: 'associate_id', through: 'associate_customers', as: 'customers' })
-    this.belongsToMany(Motoboy, { foreignKey: 'associate_id', through: 'associate_motoboys', as: 'motoboys' })
-    this.hasMany(Order, { foreignKey: 'associate_id', as: 'orders' })
+    this.hasOne(Address, { foreignKey: 'associateId', as: 'address' })
+    this.belongsToMany(Customer, { through: 'associateCustomers', foreignKey: 'associateId', as: 'customers' })
+    this.belongsToMany(Motoboy, { through: 'associateMotoboys', foreignKey: 'associateId', as: 'motoboys' })
+    this.hasMany(Order, { foreignKey: 'associateId', as: 'orders' })
   }
 }
 

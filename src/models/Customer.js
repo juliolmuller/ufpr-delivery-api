@@ -5,13 +5,16 @@ class Customer extends Model {
     super.init({
       name: DataTypes.STRING,
       cnpj: DataTypes.STRING(14),
-    }, { sequelize })
+    }, {
+      tableName: 'customers',
+      sequelize,
+    })
   }
 
   static associate({ Address, Associate, Order }) {
-    this.hasOne(Address, { foreignKey: 'customer_id', as: 'address' })
-    this.belongsToMany(Associate, { foreignKey: 'associate_id', through: 'associate_customers', as: 'associates' })
-    this.hasMany(Order, { foreignKey: 'customer_id', as: 'orders' })
+    this.hasOne(Address, { foreignKey: 'customerId', as: 'address' })
+    this.belongsToMany(Associate, { through: 'associateCustomers', foreignKey: 'customerId', as: 'associates' })
+    this.hasMany(Order, { foreignKey: 'customerId', as: 'orders' })
   }
 }
 

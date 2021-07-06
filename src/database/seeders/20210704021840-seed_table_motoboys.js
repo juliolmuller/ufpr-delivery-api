@@ -5,16 +5,16 @@ function makeMotoboy() {
   const name = faker.name.findName()
   const phone = faker.phone.phoneNumber()
   const password = passwordUtils.hash('qwerty123')
-  const created_at = faker.date.past(2)
-  const updated_at = faker.date.between(created_at, new Date())
+  const createdAt = faker.date.past(2)
+  const updatedAt = faker.date.between(createdAt, new Date())
 
   return {
     name,
     cpf,
     phone,
     password,
-    created_at,
-    updated_at,
+    createdAt,
+    updatedAt,
   }
 }
 

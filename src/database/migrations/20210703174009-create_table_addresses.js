@@ -7,7 +7,7 @@ async function up(queryInterface) {
       primaryKey: true,
       autoIncrement: true,
     },
-    associate_id: {
+    associateId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -17,7 +17,7 @@ async function up(queryInterface) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    customer_id: {
+    customerId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -51,11 +51,11 @@ async function up(queryInterface) {
       type: DataTypes.STRING(8),
       allowNull: true,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },

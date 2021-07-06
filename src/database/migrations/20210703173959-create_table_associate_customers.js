@@ -1,13 +1,13 @@
 const { DataTypes, fn } = require('sequelize')
 
 async function up(queryInterface) {
-  await queryInterface.createTable('associate_customers', {
+  await queryInterface.createTable('associateCustomers', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    associate_id: {
+    associateId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -17,7 +17,7 @@ async function up(queryInterface) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    customer_id: {
+    customerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -27,11 +27,11 @@ async function up(queryInterface) {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: fn('NOW'),
     },
