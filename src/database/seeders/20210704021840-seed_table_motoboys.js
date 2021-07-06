@@ -1,28 +1,25 @@
 const { faker, passwordUtils } = require('../../utils')
 
-function makeMotoboy({ associates }) {
+function makeMotoboy() {
   const cpf = faker.cpf()
   const name = faker.name.findName()
   const phone = faker.phone.phoneNumber()
   const password = passwordUtils.hash('qwerty123')
   const created_at = faker.date.past(2)
   const updated_at = faker.date.between(created_at, new Date())
-  const associate_id = faker.random.arrayElement(associates).id
 
   return {
     name,
     cpf,
     phone,
     password,
-    associate_id,
     created_at,
     updated_at,
   }
 }
 
 async function up(queryInterface) {
-  const [associates] = await queryInterface.sequelize.query('SELECT id from associates')
-  const motoboys = new Array(30).fill().map(() => makeMotoboy({ associates }))
+  const motoboys = new Array(30).fill().map(makeMotoboy)
 
   await queryInterface.bulkInsert('motoboys', motoboys, {})
 }
