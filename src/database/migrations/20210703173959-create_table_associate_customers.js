@@ -39,7 +39,7 @@ async function up(queryInterface) {
 }
 
 async function down(queryInterface) {
-  await queryInterface.dropTable('customers')
+  await queryInterface.dropTable('associateCustomers')
 }
 
 module.exports = { up, down }
