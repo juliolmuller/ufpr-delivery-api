@@ -11,14 +11,15 @@ const { motoboysResource } = require('../resources')
  */
 async function index(request, response) {
   const queryFilter = request.auth.role === 'ASSOC'
-    ? { include: { association: 'associates', where: { id: request.auth.id } } }
+    ? { include: {
+      association: 'associates',
+      where: { id: request.auth.id } } }
     : {}
   const motoboys = await Motoboy.findAll(queryFilter)
 
   response
     .status(StatusCodes.OK)
-    .json(motoboys)
-    // .json(motoboysResource(motoboys))
+    .json(motoboysResource(motoboys))
 }
 
 /**
@@ -33,9 +34,15 @@ async function show(request, response) {
   const queryFilter = (() => {
     switch (request.auth.role) {
       case 'ASSOC':
-        return { where: { cpf }, include: { association: 'associates', where: { id: request.auth.id } } }
+        return {
+          where: { cpf },
+          include: {
+            association: 'associates',
+            where: { id: request.auth.id } } }
       case 'MOTOBOY':
-        return { where: { cpf, id: request.auth.id } }
+        return {
+          where: { cpf, id: request.auth.id },
+        }
       default:
         return {}
     }
@@ -77,21 +84,23 @@ function update(request, response) {
  * @middleware
  */
 async function destroy(request, response) {
-  const motoboyId = request.params.id
+  const { id } = request.params
   const queryFilter = {
-    where: { id: motoboyId },
-    include: { association: 'associates', where: { id: request.auth.id } },
-  }
-  const recordsCount = await Motoboy.destroy(queryFilter)
+    where: { id },
+    include: {
+      association: 'associates',
+      where: { id: request.auth.id } } }
+  const motoboy = await Motoboy.findOne(queryFilter)
 
-  console.log(recordsCount)
-  if (recordsCount === 0) {
-    throw new ResourceNotFound(`Motoboy com ID '${motoboyId}' não encontrado.`)
+  if (!motoboy) {
+    throw new ResourceNotFound(`Motoboy com ID '${id}' não encontrado.`)
   }
+
+  console.log(await motoboy.destroy())
 
   response
     .status(StatusCodes.OK)
-    .json({ message: 'Motoboy excluído com sucesso.' })
+    .json(motoboysResource(motoboy))
 }
 
 module.exports = { index, show, store, update, destroy }
