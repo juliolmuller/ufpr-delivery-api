@@ -2,7 +2,7 @@ const { faker } = require('../../utils')
 
 function makeCustomer() {
   const cnpj = faker.cnpj()
-  const name = faker.name.findName()
+  const name = faker.company.companyName()
   const createdAt = faker.date.past(2)
   const updatedAt = faker.date.between(createdAt, new Date())
 

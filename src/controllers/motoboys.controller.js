@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 const { ResourceNotFound } = require('../errors')
-const { motoboysResource } = require('../resources')
 const { Motoboy } = require('../models')
+const { motoboysResource } = require('../resources')
 
 /**
  * Lista todos os registros de motoboys.Caso o usuário esteja autenticado com
@@ -11,13 +11,14 @@ const { Motoboy } = require('../models')
  */
 async function index(request, response) {
   const queryFilter = request.auth.role === 'ASSOC'
-    ? { where: { associate_id: request.auth.id } }
+    ? { include: { association: 'associates', where: { id: request.auth.id } } }
     : {}
   const motoboys = await Motoboy.findAll(queryFilter)
 
   response
     .status(StatusCodes.OK)
-    .json(motoboysResource(motoboys))
+    .json(motoboys)
+    // .json(motoboysResource(motoboys))
 }
 
 /**
@@ -32,7 +33,7 @@ async function show(request, response) {
   const queryFilter = (() => {
     switch (request.auth.role) {
       case 'ASSOC':
-        return { where: { cpf, associate_id: request.auth.id } }
+        return { where: { cpf }, include: { association: 'associates', where: { id: request.auth.id } } }
       case 'MOTOBOY':
         return { where: { cpf, id: request.auth.id } }
       default:
@@ -77,12 +78,13 @@ function update(request, response) {
  */
 async function destroy(request, response) {
   const motoboyId = request.params.id
-  const queryFilter = { where: {
-    associate_id: request.auth.id,
-    id: motoboyId,
-  } }
+  const queryFilter = {
+    where: { id: motoboyId },
+    include: { association: 'associates', where: { id: request.auth.id } },
+  }
   const recordsCount = await Motoboy.destroy(queryFilter)
 
+  console.log(recordsCount)
   if (recordsCount === 0) {
     throw new ResourceNotFound(`Motoboy com ID '${motoboyId}' não encontrado.`)
   }
