@@ -62,7 +62,7 @@ Os seguintes *endpoints* foram criados para atender aos requisitos:
 | `/motoboys`               |  GET   |      `admin`/`assoc`      | Listar dados de todos os motoboys                                        |
 | `/motoboys/{cpf}`         |  GET   | `admin`/`assoc`/`motoboy` | Acessar dados de motoboy com CPF `{cpf}`                                 |
 | `/motoboys`               |  POST  |          `assoc`          | Cadastrar novo motoboy                                                   |
-| `/motoboys/{id}`          |  PUT   |          `assoc`          | Atualizar dados de motoboy com ID `{id}`                                 |
+| `/motoboys/{id}`          |  PUT   |     `assoc`/`motoboy`     | Atualizar dados de motoboy com ID `{id}`                                 |
 | `/motoboys/{id}`          | DELETE |          `assoc`          | Excluir cadastro de motoboy com ID `{id}`                                |
 | `/orders`                 |  GET   | `admin`/`assoc`/`motoboy` | Listar dados de todas as entregas                                        |
 | `/orders?status={status}` |  GET   | `admin`/`assoc`/`motoboy` | Listar dados de todas as entregas com status `{status}`                  |
