@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes')
+const { ValidationError: YupError } = require('yup')
 const AuthenticationError = require('./AuthenticationError')
 const AuthorizationError = require('./AuthorizationError')
 const ResourceNotFound = require('./ResourceNotFound')
@@ -15,7 +16,7 @@ function errorHandler(error, _request, response, _next) {
   if (error instanceof ResourceNotFound) {
     return ResourceNotFound.handleResponse(error, response)
   }
-  if (error instanceof ValidationError) {
+  if (error instanceof ValidationError || error instanceof YupError) {
     return ValidationError.handleResponse(error, response)
   }
 
