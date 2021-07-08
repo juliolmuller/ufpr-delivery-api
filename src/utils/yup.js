@@ -62,7 +62,8 @@ yup.addMethod(yup.string, 'password', function () {
       exclusive: true,
       message: 'Senha deve ter pelo menos 1 letra, 1 número e 1 caracter especial.',
       test: (value) => (
-        value.match(/[a-z]/i)
+        value
+        && value.match(/[a-z]/i)
         && value.match(/[0-9]/)
         && value.match(/["'!#$%&*()/[\]{}<>,.;:?_=-]/)
       ),
