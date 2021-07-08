@@ -5,4 +5,5 @@ module.exports = {
   passwordUtils: require('./password-utils'),
   jwtUtils: require('./jwt-utils'),
   faker: require('./faker'),
+  yup: require('./yup'),
 }
