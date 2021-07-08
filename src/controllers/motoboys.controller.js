@@ -1,7 +1,8 @@
 const { StatusCodes } = require('http-status-codes')
 const { ResourceNotFound } = require('../errors')
-const { Motoboy } = require('../models')
 const { motoboysResource } = require('../resources')
+const { passwordUtils } = require('../utils')
+const { Motoboy } = require('../models')
 
 /**
  * Lista todos os registros de motoboys.Caso o usuário esteja autenticado com
@@ -84,9 +85,38 @@ async function store(request, response) {
  *
  * @middleware
  */
-function update(request, response) {
-  // TODO: implement
-  response.send()
+async function update(request, response) {
+  const { id } = request.params
+  const queryFilter = (() => {
+    switch (request.auth.role) {
+      case 'ASSOC':
+        return {
+          where: { id },
+          include: {
+            association: 'associates',
+            where: { id: request.auth.id } } }
+      case 'MOTOBOY':
+        return {
+          where: { id: request.auth.id },
+        }
+      default:
+        return {}
+    }
+  })()
+  const motoboy = await Motoboy.findOne(queryFilter)
+
+  if (!motoboy) {
+    throw new ResourceNotFound(`Motoboy com ID '${id}' não encontrado.`)
+  }
+
+  motoboy.password = passwordUtils.hash(request.body.new_password)
+  motoboy.phone = request.body.phone
+  motoboy.name = request.body.name
+  await motoboy.save()
+
+  response
+    .status(StatusCodes.OK)
+    .json(motoboysResource(motoboy))
 }
 
 /**
