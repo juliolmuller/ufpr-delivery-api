@@ -63,9 +63,20 @@ async function show(request, response) {
  *
  * @middleware
  */
-function store(request, response) {
-  // TODO: implement
-  response.send()
+async function store(request, response) {
+  const motoboy = new Motoboy({
+    password: passwordUtils.hash(request.body.password),
+    phone: request.body.phone,
+    name: request.body.name,
+    cpf: request.body.cpf,
+  })
+
+  await motoboy.save()
+  await motoboy.addAssociate(request.auth.id)
+
+  response
+    .status(StatusCodes.CREATED)
+    .json(motoboysResource(motoboy))
 }
 
 /**
