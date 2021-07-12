@@ -21,7 +21,7 @@ router.get('/', (_request, response) => {
 
 router.use(authRouter)
 router.use('/reports', validateToken(), reportsRouter)
-router.use('/associates', validateToken(), associatesRouter)
+router.use('/associates', associatesRouter)
 router.use('/customers', validateToken(), customersRouter)
 router.use('/motoboys', validateToken(), motoboysRouter)
 router.use('/orders', validateToken(), ordersRouter)
