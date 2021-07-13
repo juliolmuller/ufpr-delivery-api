@@ -65,14 +65,15 @@ async function show(request, response) {
  * @middleware
  */
 async function store(request, response) {
-  const motoboy = new Motoboy({
-    password: passwordUtils.hash(request.body.password),
-    phone: request.body.phone,
-    name: request.body.name,
-    cpf: request.body.cpf,
+  const [motoboy] = await Motoboy.findOrCreate({
+    where: { cpf: request.body.cpf },
+    defaults: {
+      password: passwordUtils.hash(request.body.password),
+      phone: request.body.phone,
+      name: request.body.name,
+    },
   })
 
-  await motoboy.save()
   await motoboy.addAssociate(request.auth.id)
 
   response
@@ -137,7 +138,7 @@ async function destroy(request, response) {
     throw new ResourceNotFound(`Motoboy com ID '${id}' não encontrado.`)
   }
 
-  console.log(await motoboy.destroy())
+  await motoboy.removeAssociate(request.auth.id)
 
   response
     .status(StatusCodes.OK)
