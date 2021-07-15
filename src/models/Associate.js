@@ -16,7 +16,7 @@ class Associate extends Model {
     this.hasOne(Address, { foreignKey: 'associateId', as: 'address' })
     this.belongsToMany(Customer, { through: 'associateCustomers', foreignKey: 'associateId', as: 'customers' })
     this.belongsToMany(Motoboy, { through: 'associateMotoboys', foreignKey: 'associateId', as: 'motoboys' })
-    this.hasMany(Order, { foreignKey: 'associateId', as: 'orders' })
+    this.hasMany(Order, { foreignKey: 'associateId', as: 'orders', onDelete: 'cascade' })
   }
 }
 
