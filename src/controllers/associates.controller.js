@@ -33,6 +33,7 @@ async function show(request, response) {
 }
 
 async function store(request, response) {
+  //:TODO validaçoes
   try {
     const { name, cnpj, password, address } = request.body
 
@@ -59,13 +60,43 @@ async function store(request, response) {
 async function update(request, response) {
   try {
     const { id } = request.params
-    const {name,cnpj,password} = request.body
-    const associate = await Associate.findByPk(id)
+    const {name,cnpj,password,address} = request.body
+    const associate = await Associate.findByPk(
+      id,
+      { include: {
+        model: Address,
+        as: 'address'
+      }
+      }
+    )
     if (name) associate.name = name
     if (cnpj) associate.cnpj = cnpj
     if (password) associate.password = passwordUtils.hash(password)
     await associate.save()
-    response.status(StatusCodes.CREATED).send(associate)
+
+    if (address) {
+      if (associate.address) {
+        const newAddress = await Address.findByPk(associate.address.id)
+        const { street, number, complement, city, state, cep } = address
+        newAddress.street = street
+        newAddress.number = number
+        newAddress.complement = complement
+        newAddress.city = city
+        newAddress.state = state
+        newAddress.cep = cep
+        newAddress.associateId = associate.id
+        await newAddress.save()
+      }
+      else {
+
+        const newAdress = new Address({
+          ...address,
+          associateId: associate.id
+        })
+        await newAdress.save()
+      }
+    }
+    response.status(StatusCodes.CREATED).send({msg:"Associação salva com sucesso."})
 
   } catch (error) {
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error: `Erro ao editar associado, msg: ${error}`})
