@@ -92,7 +92,7 @@ async function financial(request, response) {
       report.montanteTotal =`R$ ${total.toFixed(2)}`
       report.montanteMotoboys = `R$ ${(total * 0.7).toFixed(2)}`
       report.montanteAssociado = `R$ ${(total * 0.3).toFixed(2)}`
-      report.valorMedioEntrega = `R$ ${(total / orders.length).toFixed(2)}`
+      report.valorMedioEntrega = orders.length ? `R$ ${(total / orders.length).toFixed(2)}` : 'R$ 0.00'
       report.totalDeEntregas = orders.length
 
       response.send({report})
@@ -108,7 +108,7 @@ async function financial(request, response) {
       reportMotoboy.montanteTotalMotoboy =`R$ ${totalMotoboy.toFixed(2)}`
       reportMotoboy.montanteMotoboys = `R$ ${(totalMotoboy * 0.7).toFixed(2)}`
       reportMotoboy.totalDeEntregas = ordersMotoboy.length
-      reportMotoboy.valorMedioEntrega = `R$ ${(totalMotoboy/ordersMotoboy.length).toFixed(2)}`
+      reportMotoboy.valorMedioEntrega = ordersMotoboy.length ? `R$ ${(totalMotoboy/ordersMotoboy.length).toFixed(2)}` : 'R$ 0.00'
       response.send({reportMotoboy})
       break;
     }
