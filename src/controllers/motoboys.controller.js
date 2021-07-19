@@ -5,7 +5,7 @@ const { passwordUtils } = require('../utils')
 const { Motoboy } = require('../models')
 
 /**
- * Lista todos os registros de motoboys.Caso o usuário esteja autenticado com
+ * Lista todos os registros de motoboys. Caso o usuário esteja autenticado com
  * perfil "ASSOC", apenas os registros associados a ele estarão disponíveis.
  *
  * @middleware
@@ -24,7 +24,7 @@ async function index(request, response) {
 }
 
 /**
- * Retorna os registros para o motoboy com CPF passado como parâmetro. Caso o
+ * Retorna o registro para o motoboy com CPF passado como parâmetro. Caso o
  * usuário esteja autenticado com perfil "ASSOC" ou "mMOTOBOY", apenas os
  * registros associados a ele estarão disponíveis.
  *
@@ -127,12 +127,13 @@ async function update(request, response) {
  */
 async function destroy(request, response) {
   const { id } = request.params
-  const queryFilter = {
+  const motoboy = await Motoboy.findOne({
     where: { id },
     include: {
       association: 'associates',
-      where: { id: request.auth.id } } }
-  const motoboy = await Motoboy.findOne(queryFilter)
+      where: { id: request.auth.id },
+    },
+  })
 
   if (!motoboy) {
     throw new ResourceNotFound(`Motoboy com ID '${id}' não encontrado.`)
