@@ -1,120 +1,147 @@
-const { StatusCodes } = require("http-status-codes")
-const { Associate, Address } = require("../models")
-const { passwordUtils } = require("../utils")
+const { StatusCodes } = require('http-status-codes')
+const { ResourceNotFound } = require('../errors')
+const { Associate, Address, Customer, Motoboy } = require('../models')
+const { associatesResource } = require('../resources')
+const { passwordUtils } = require('../utils')
 
+/**
+ * Lista todos os registros de associadoss.
+ *
+ * @middleware
+ */
 async function index(request, response) {
-  try {
-    const associates = await Associate.findAll({ include: {
-        model: Address,
-        as: 'address'
-      }})
-    response.status(StatusCodes.ACCEPTED).send(associates)
+  const associates = await Associate.findAll({
+    include: [
+      { model: Address, as: 'address' },
+      { model: Customer, as: 'customers' },
+      { model: Motoboy, as: 'motoboys' },
+    ],
+  })
 
-  } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error})
-
-  }
+  response
+    .status(StatusCodes.OK)
+    .json(associatesResource(associates))
 }
 
+/**
+ * Retorna o registro para o associado com CNPJ passado como parâmetro.
+ *
+ * @middleware
+ */
 async function show(request, response) {
-  try {
-    const {cnpj} = request.params
+  const { cnpj } = request.params
+  const associate = await Associate.findOne({
+    where: { cnpj },
+    include: [
+      { model: Address, as: 'address' },
+      { model: Customer, as: 'customers' },
+      { model: Motoboy, as: 'motoboys' },
+    ],
+  })
 
-    const associate = await Associate.findOne({ where: { cnpj }, include: {
-        model: Address,
-        as: 'address'
-      }}  )
-    response.status(StatusCodes.ACCEPTED).send(associate)
-
-  } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error})
-
+  if (!associate) {
+    throw new ResourceNotFound(`Associado com CNPJ '${cnpj}' não encontrado.`)
   }
+
+  response
+    .status(StatusCodes.OK)
+    .json(associatesResource(associate))
 }
 
+/**
+ * Salva os dados de um novo associado.
+ *
+ * @middleware
+ */
 async function store(request, response) {
-  //:TODO validaçoes
-  try {
-    const { name, cnpj, password, address } = request.body
+  const associate = new Associate({
+    password: passwordUtils.hash(request.body.password),
+    name: request.body.name,
+    cnpj: request.body.cnpj,
+  })
 
-    const associate = new Associate({
-      name,
-      cnpj,
-      password: passwordUtils.hash(password),
-    })
-    const doc = await associate.save()
-    if (address) {
-      const newAdress = new Address({
-        ...address,
-        associateId: doc.id
-      })
-      await newAdress.save()
-    }
-    response.status(StatusCodes.CREATED).send({msg: "Associado criado com sucesso"})
-  } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error: `Erro ao criar associado, msg: ${error}`})
+  await associate.save()
+  associate.motoboys = []
+  associate.customers = []
+  associate.address = request.body.address
+    ? await associate.setAddress(new Address({
+      ...request.body.address,
+      associateId: associate.id }))
+    : null
 
-  }
+  response
+    .status(StatusCodes.CREATED)
+    .json(associatesResource(associate))
 }
 
+/**
+ * Altera os dados de um associado com o ID passado como parâmetro.
+ *
+ * @middleware
+ */
 async function update(request, response) {
-  try {
-    const { id } = request.params
-    const {name,cnpj,password,address} = request.body
-    const associate = await Associate.findByPk(
-      id,
-      { include: {
-        model: Address,
-        as: 'address'
-      }
-      }
-    )
-    if (name) associate.name = name
-    if (cnpj) associate.cnpj = cnpj
-    if (password) associate.password = passwordUtils.hash(password)
-    await associate.save()
+  const { id } = request.params
+  const associate = await Associate.findOne({
+    where: { id },
+    include: {
+      model: Address,
+      as: 'address',
+    },
+  })
 
-    if (address) {
-      if (associate.address) {
-        const newAddress = await Address.findByPk(associate.address.id)
-        const { street, number, complement, city, state, cep } = address
-        newAddress.street = street
-        newAddress.number = number
-        newAddress.complement = complement
-        newAddress.city = city
-        newAddress.state = state
-        newAddress.cep = cep
-        newAddress.associateId = associate.id
-        await newAddress.save()
-      }
-      else {
-
-        const newAdress = new Address({
-          ...address,
-          associateId: associate.id
-        })
-        await newAdress.save()
-      }
-    }
-    response.status(StatusCodes.CREATED).send({msg:"Associação salva com sucesso."})
-
-  } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error: `Erro ao editar associado, msg: ${error}`})
+  if (!associate) {
+    throw new ResourceNotFound(`Associado com ID '${id}' não encontrado.`)
   }
+
+  associate.password = passwordUtils.hash(request.body.new_password)
+  associate.name = request.body.name
+  await associate.save()
+
+  if (request.body.address) {
+    const [address] = await Address.findOrCreate({
+      where: { id: associate.address && associate.address.id },
+      defaults: { associateId: associate.id },
+    })
+
+    address.street = request.body.address.street
+    address.number = request.body.address.number
+    address.complement = request.body.address.complement
+    address.city = request.body.address.city
+    address.state = request.body.address.state
+    address.cep = request.body.address.cep
+    address.associateId = associate.id
+    associate.address = await address.save()
+  }
+
+  response
+    .status(StatusCodes.OK)
+    .json(associatesResource(associate))
 }
 
+/**
+ * Exclui o registro de um associado com o ID passado como parâmetro.
+ *
+ * @middleware
+ */
 async function destroy(request, response) {
-  try {
-    const { id } = request.params
-    const result = await Associate.destroy({ where: { id } })
-    let msg = ''
-    if(result>0)
-      msg = `Associação numero ${id} removida`
-    else msg = `Nenhuma associação com o numero ${id} foi encontrado`
-    response.status(StatusCodes.ACCEPTED).send({msg})
-  } catch (error) {
-    response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({error: `Erro ao remover associado, msg: ${error}`})
+  const { id } = request.params
+  const associate = await Associate.findOne({
+    where: { id },
+    include: {
+      model: Address,
+      as: 'address',
+    },
+  })
+
+  if (!associate) {
+    throw new ResourceNotFound(`Associado com ID '${id}' não encontrado.`)
   }
+
+  await associate.destroy()
+
+  response
+    .status(StatusCodes.OK)
+    .json(associate)
 }
 
 module.exports = { index, show, store, update, destroy }

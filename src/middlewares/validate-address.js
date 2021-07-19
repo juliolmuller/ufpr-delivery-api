@@ -1,30 +1,24 @@
-const {  yup } = require('../utils')
-
-
-
-const streetSchema = yup.string().required()
-const numberSchema = yup.string().required()
-const complementSchema = yup.string().required()
-const citySchema = yup.string().required()
-const stateSchema = yup.string().required()
-const cepSchema = yup.string().required().length(8)
+const { yup } = require('../utils')
 
 const addressSchemaSchema = yup.object().shape({
-      street: streetSchema,
-      number: numberSchema,
-      complement: complementSchema,
-      city: citySchema,
-      state: stateSchema,
-      cep: cepSchema,
+  street: yup.string().optional(),
+  number: yup.string().optional(),
+  complement: yup.string().optional(),
+  city: yup.string().optional(),
+  state: yup.string().optional().length(2),
+  cep: yup.string().optional().length(8),
 })
 
-function validateAddress(){
+function validateAddress() {
   return async (request, _response, next) => {
-    let {address} = request.body
-    if (address){
+    const { address } = request.body
+
+    if (address) {
       request.body.address = await addressSchemaSchema.validate(address)
     }
+
     next()
   }
 }
-module.exports= validateAddress
+
+module.exports = validateAddress
