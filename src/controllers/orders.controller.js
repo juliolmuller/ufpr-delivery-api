@@ -13,7 +13,7 @@ async function listOrderByStatus(request, response) {
   const { status, motoboy } = request.params
 
   console.log(request.params)
-  const queryFilter =  { 
+  const queryFilter =  {
     where : {
       status: status.toUpperCase(),
       id: motoboy
@@ -38,8 +38,7 @@ async function listOrderByMotoboy(request, response) {
   response
     .status(StatusCodes.ACCEPTED).send(orders)
 }
-
-function show(request, response) {
+async function show(request, response) {
   const { id } = request.params
   const queryFilter = {
       where: { id },
@@ -83,7 +82,7 @@ async function update(request, response) {
   const queryFilter = {
     where: { id }
   }
-  
+
   const order = await Order.findOne(queryFilter)
 
   if (!order) {
@@ -106,7 +105,7 @@ async function destroy(request, response) {
 
   const result = await Order.destroy(queryFilter)
   let msg = ''
-  
+
   if (result > 0)
     msg = `Pedido número ${id} removido`
   else msg = `Nenhum pedido com o número ${id} foi encontrado`
