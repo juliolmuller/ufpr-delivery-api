@@ -4,7 +4,7 @@ async function up(queryInterface) {
   const [associates] = await queryInterface.sequelize.query('SELECT id from associates')
   const [customers] = await queryInterface.sequelize.query('SELECT id, createdAt, updatedAt from customers')
   const records = customers.map(({ id, ...timestamps }) => ({
-    associateId: faker.random.arrayElement(associates).id,
+    associateId: 1,
     customerId: id,
     ...timestamps,
   }))
