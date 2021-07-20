@@ -78,16 +78,13 @@ OBS: Apenas os dados pertinentes ao usuário autenticado são acessíveis a ele
 
 ### Obter token para acesso aos endpoints
 
-Para autenticar como administrador (perfil `admin`), defina o **login** e **senha** nas variáveis de ambiente:
+Para autenticar como administrador (perfil `admin`), pastar submeter uma requisição **POST**: para o endpoint específico. O token do admin está definido nas variáveis de ambiente.
 
 ```http
 POST http://localhost:8081/signin/admin
 Content-Type: application/json
 
-{
-  "login": "admin",
-  "password": "qwerty123"
-}
+{}
 ```
 
 Para autenticar como **associado** ou **motoboy**, inclua o perfil (*role*) na url e passe as credenciais de um item do banco (a senha padrão gerada pelos seeders é `qwerty123`). Use CNPJ para **associados** e CPF para **motoboy**:
